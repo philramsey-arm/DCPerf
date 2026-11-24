@@ -164,7 +164,7 @@ setup_miniconda() {
 
   mkdir -p "${MINICONDA_PREFIX}"
   # Use curl (wget blocked on some test servers)
-  curl -fsSL "https://repo.anaconda.com/miniconda/Miniconda3-latest-${PLATFORM_NAME}.sh" -o miniconda.sh
+  curl -fsSL "https://pro.anaconda.com/miniconda/Miniconda3-latest-${PLATFORM_NAME}.sh" -o miniconda.sh
   bash miniconda.sh -b -p "${MINICONDA_PREFIX}" -u
   rm -f miniconda.sh
 
@@ -172,8 +172,8 @@ setup_miniconda() {
   export PATH="${MINICONDA_PREFIX}/bin:${PATH}"
   export CONDA="${MINICONDA_PREFIX}"
 
-  conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main 2>/dev/null || true
-  conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r 2>/dev/null || true
+  conda tos accept --override-channels --channel https://pro.anaconda.com/pkgs/main 2>/dev/null || true
+  conda tos accept --override-channels --channel https://pro.anaconda.com/pkgs/r 2>/dev/null || true
   conda update -n base -c conda-forge -y conda
 
   log_info "Miniconda setup complete."

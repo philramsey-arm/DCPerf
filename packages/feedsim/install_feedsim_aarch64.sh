@@ -261,13 +261,18 @@ cd "${FEEDSIM_THIRD_PARTY_SRC}"
 
 MINICONDA_VERSION="latest"
 CONDA_DIR="${FEEDSIM_THIRD_PARTY_SRC}/miniconda3"
+# Resolve named channels through the approved mirror and keep Conda's defaults
+# on the approved host, including when reusing an existing Miniconda install.
+export CONDA_CHANNEL_ALIAS="https://pro.anaconda.cloud"
+export CONDA_DEFAULT_CHANNELS="https://pro.anaconda.com/pkgs/main,https://pro.anaconda.com/pkgs/r"
+export CONDA_CHANNELS="defaults"
 
 if ! [ -d "libtorch" ]; then
     # Install Miniconda for a clean Python environment
     if ! [ -d "${CONDA_DIR}" ]; then
         msg "Installing Miniconda..."
         ARCH="$(uname -m)"
-        MINICONDA_URL="https://repo.anaconda.com/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-${ARCH}.sh"
+        MINICONDA_URL="https://pro.anaconda.com/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-${ARCH}.sh"
         wget "${MINICONDA_URL}" -O miniconda.sh
         bash miniconda.sh -b -p "${CONDA_DIR}"
         rm miniconda.sh
@@ -287,9 +292,9 @@ if ! [ -d "libtorch" ]; then
 
     # Also install libstdcxx-ng to ensure compatible C++ runtime
     eval "$("${CONDA_DIR}/bin/conda" shell.bash hook)"
-    conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main || true
-    conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r || true
-    conda install -y -c conda-forge libstdcxx-ng
+    conda tos accept --override-channels --channel https://pro.anaconda.com/pkgs/main || true
+    conda tos accept --override-channels --channel https://pro.anaconda.com/pkgs/r || true
+    conda install -y --override-channels -c conda-forge libstdcxx-ng
 
     # Locate the pip-installed torch package
     TORCH_DIR="$(${CONDA_DIR}/bin/python3 -c 'import torch, os; print(os.path.dirname(torch.__file__))')"

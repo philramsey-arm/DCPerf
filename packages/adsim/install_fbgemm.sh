@@ -157,8 +157,8 @@ setup_miniconda() {
 
   # Download the appropriate Miniconda installer for the current platform
   echo "Downloading Miniconda installer for ${PLATFORM_NAME}..."
-  # wget -q "https://repo.anaconda.com/miniconda/Miniconda3-latest-${PLATFORM_NAME}.sh" -O miniconda.sh
-  wget -q "https://repo.anaconda.com/miniconda/Miniconda3-py39_25.${MINICONDA_VERSION}-${PLATFORM_NAME}.sh" -O miniconda.sh
+  # wget -q "https://pro.anaconda.com/miniconda/Miniconda3-latest-${PLATFORM_NAME}.sh" -O miniconda.sh
+  wget -q "https://pro.anaconda.com/miniconda/Miniconda3-py39_25.${MINICONDA_VERSION}-${PLATFORM_NAME}.sh" -O miniconda.sh
 
   # Install Miniconda in batch mode (-b) to the specified prefix (-p) and update (-u) any existing installation
   echo "Installing Miniconda in batch mode..."
@@ -176,8 +176,8 @@ setup_miniconda() {
   # Update conda to the latest version from conda-forge
   echo "Updating conda to the latest version..."
   conda update -n base -c conda-forge -y conda
-  conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
-  conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+  conda tos accept --override-channels --channel https://pro.anaconda.com/pkgs/main
+  conda tos accept --override-channels --channel https://pro.anaconda.com/pkgs/r
 
   # Run conda with the base python when a long prefix gave it an env shebang
   for f in "${miniconda_prefix}/bin/conda" "${miniconda_prefix}/condabin/conda"; do

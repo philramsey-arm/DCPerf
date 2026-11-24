@@ -158,7 +158,7 @@ setup_miniconda() {
 
   # Download the appropriate Miniconda installer for the current platform
   echo "Downloading Miniconda installer for ${PLATFORM_NAME}..."
-  wget -q "https://repo.anaconda.com/miniconda/Miniconda3-latest-${PLATFORM_NAME}.sh" -O miniconda.sh
+  wget -q "https://pro.anaconda.com/miniconda/Miniconda3-latest-${PLATFORM_NAME}.sh" -O miniconda.sh
 
   # Install Miniconda in batch mode (-b) to the specified prefix (-p) and update (-u) any existing installation
   echo "Installing Miniconda in batch mode..."
@@ -174,8 +174,8 @@ setup_miniconda() {
   export CONDA="${miniconda_prefix}"
 
   # Accept the default Anaconda channel terms before the first Conda operation.
-  conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
-  conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+  conda tos accept --override-channels --channel https://pro.anaconda.com/pkgs/main
+  conda tos accept --override-channels --channel https://pro.anaconda.com/pkgs/r
   conda tos accept --override-channels --channel https://conda.anaconda.org/conda-forge || true
 
   # Update conda to the latest version from conda-forge

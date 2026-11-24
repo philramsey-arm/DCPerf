@@ -138,10 +138,10 @@ if ! in_conda_env; then
             mkdir -p "${WDL_ROOT}/miniconda3"
             if [ "$ARCH" = "aarch64" ]; then
                 # shellcheck disable=SC2046
-                curl $(get_curl_proxy_args) -o "${WDL_ROOT}/miniconda3/miniconda.sh" https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh || exit
+                curl $(get_curl_proxy_args) -o "${WDL_ROOT}/miniconda3/miniconda.sh" https://pro.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh || exit
             else
                 # shellcheck disable=SC2046
-                curl $(get_curl_proxy_args) -o "${WDL_ROOT}/miniconda3/miniconda.sh" https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh || exit
+                curl $(get_curl_proxy_args) -o "${WDL_ROOT}/miniconda3/miniconda.sh" https://pro.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh || exit
             fi
             bash -c "sh ${WDL_ROOT}/miniconda3/miniconda.sh -b -u -p ${WDL_ROOT}/miniconda3" || exit
             # shellcheck disable=SC1091
