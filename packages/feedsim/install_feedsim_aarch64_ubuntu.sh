@@ -27,6 +27,7 @@ FEEDSIM_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
 BENCHPRESS_ROOT="$(readlink -f "$FEEDSIM_ROOT/../..")"
 FEEDSIM_ROOT_SRC="${BENCHPRESS_ROOT}/benchmarks/feedsim"
 FEEDSIM_THIRD_PARTY_SRC="${FEEDSIM_ROOT_SRC}/third_party"
+LIBURING_INSTALL_MARKER="/usr/local/lib/.liburing-2.12-installed"
 LIBTORCH_VERSION="${LIBTORCH_VERSION:-2.13.0}"
 DLRM_MODEL_URL="https://github.com/facebookresearch/DCPerf-datasets/releases/download/feedsim-dlrm/dlrm_small.tar.gz"
 echo "BENCHPRESS_ROOT is ${BENCHPRESS_ROOT}"
@@ -37,26 +38,37 @@ apt install -y bc cmake ninja-build flex bison texinfo binutils-dev \
     zlib1g-dev libdwarf-dev libaio-dev libatomic1 patch perl libiberty-dev \
     sysstat jq unzip xxhash libxxhash-dev libboost-all-dev rsync curl git wget numactl python3
 
+CMAKE_VERSION=$(cmake --version | head -n 1 | awk '{print $3}')
+
+if ! dpkg --compare-versions "$CMAKE_VERSION" ge "3.28"; then
+    echo "Error: CMake >= 3.28 is required (found ${CMAKE_VERSION})."
+    exit 1
+fi
+
 # Install liburing >= 2.6 from source. Ubuntu's apt-shipped liburing is
 # older than folly's minimum, so folly's io_uring integration links
 # `-luring` against a nonexistent library. Build tag liburing-2.12 upstream
 # and install into /usr/local so folly's `find_library` picks it up.
-if ! ldconfig -p 2>/dev/null | grep -q "liburing.so.2"; then
+if ! [ -f "${LIBURING_INSTALL_MARKER}" ]; then
     msg "Building liburing 2.12 from source..."
     LIBURING_BUILD_DIR="${FEEDSIM_THIRD_PARTY_SRC}/liburing_build"
     mkdir -p "${LIBURING_BUILD_DIR}"
+
     if ! [ -d "${LIBURING_BUILD_DIR}/liburing" ]; then
-        git clone --depth 1 --branch liburing-2.12 \
+        git clone --branch liburing-2.12 \
             https://github.com/axboe/liburing.git \
             "${LIBURING_BUILD_DIR}/liburing"
     fi
+
     (
-        cd "${LIBURING_BUILD_DIR}/liburing"
-        ./configure --prefix=/usr/local
-        make -j"$(nproc)"
+        cd "${LIBURING_BUILD_DIR}/liburing" &&
+        git checkout liburing-2.12 &&
+        ./configure --prefix=/usr/local &&
+        make -j"$(nproc)" &&
         make install
-    )
-    ldconfig
+    ) &&
+    ldconfig &&
+    touch "${LIBURING_INSTALL_MARKER}"
 fi
 
 # Creates feedsim directory under benchmarks/
